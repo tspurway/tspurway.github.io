@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Readjusting to C : Not a How To" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Readjusting to C</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/tspurway">View on GitHub</a>
+
+          <h1 id="project_title">Readjusting to C</h1>
+          <h2 id="project_tagline">Not a How To</h2>
+
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>I am witnessing an odd devolution of otherwise reasonable high-level language programmers to the C programming language.  Python folks, Ruby dudes, and Java programmers are being drawn to the C flame.  I guess it's the Linuxes and vims and nginxes and other assorted C wonders.  Maybe it's that if you write your code in C, it can be used by all those other highfalutin languages, no apologies, no hassles. Maybe it's speed, though I really wonder about that, given our blistering fast processors and endless banks of RAM.</p>
+
+<p>I have noticed a bit of a trend with the Python/Ruby/Java mindset when returning to their roots, so's to speak.  It's odd, but they seem to love malloc().  I will leave the whys and whatnots as an exercise for the reader, but I thought I might offer a perspective.</p>
+
+<h3>
+<a name="the-stack" class="anchor" href="#the-stack"><span class="octicon octicon-link"></span></a>The Stack</h3>
+
+<p>If you've spent any time around a C programmer, you will notice that they talk about 'the stack' and 'the heap' a lot.  If they are feeling particularly compsciey, they might even refer to 'automatic variables'.  They talk about it in a way that there is a pretty simple choice you must make about where your variables' data lives.  You might hear them ask: "So, why is variable 'glaxxor' on the heap?  You could have easily put it on the stack and passed it's address".  You might pick up the reverent staccato of their words and concluded there is some reverence for this stack.  The heap doesn't seem as good.  Most things we put in heaps aren't.  There's a reason for that.</p>
+
+<h3>
+<a name="the-heap" class="anchor" href="#the-heap"><span class="octicon octicon-link"></span></a>The Heap</h3>
+
+<p>C programmers hate malloc().  This is the most important thing to know to become a grade A (or B) C programmer.  They mostly hate it because it's a pain in the ass to free(), it's the primary cause of memory leaks (the other, I suppose, is infinite recursion), it's slow, and it fragments your once ordered memory like so many leaves in the wind.  The canonical C program will only have calls to malloc when they are absolutely necessary, because C programmers see malloc() for what it really is: a one-size-fits-few solution to a difficult but very specific problem.</p>
+
+<p>Please note that malloc() and free() are just regular functions in the C language.  They aren't built-in, they aren't magic, they are just plain functions.  Is it odd that a language, whose primary abstraction is the memory address has no built-in way of allocating or deallocating memory? </p>
+
+<h3>
+<a name="garbage" class="anchor" href="#garbage"><span class="octicon octicon-link"></span></a>Garbage</h3>
+
+<p>You won't understand C programming until you understand the C programmer's disdain for garbage collected languages.  The C programmer approaches malloc with a plan, a clever way to 'get in' and 'get out' with the fewest casualties possible.  The GC language is carpet bombing your memory, your performance.  You see, a C program is always about moving bytes in and out of memory and external devices.  The GC languages are about something that is decidedly not moving bytes around.  It might be objects or CAR/CDRs or OOPs or JVM objects (whatever their acronym is), but it's not about memory any more.  The language has decided it knows better how to handle memory than you.  To the C programmer, this is like giving the keys to the car to some super (and most likely brain dead) version of malloc.  Heck, they didn't like malloc when they could control it, now it's going to interrupt their program to clean up 'garbage' that shouldn't have been created in the first place?</p>
+
+<h3>
+<a name="be-free-from-the-heap" class="anchor" href="#be-free-from-the-heap"><span class="octicon octicon-link"></span></a>Be Free from the Heap</h3>
+
+<p>If I haven't dissuaded my high-level colleagues from dipping their toes in the C waters, let me give a few tips on how to not avoid shying away from malloc():</p>
+
+<ul>
+<li>avoid libs that allocate memory "on your behalf"</li>
+<li>prefer libs that force the client to worry about memory management.  This usually takes the form of the lib API accepting pointers to structs to populate them.  The good thing about this is that you can malloc the memory, or leave it 'on the stack' - up to you, but... </li>
+<li>use the stack!  Remember that functions you call don't care if the memory is on the heap or stack.  Use automatic variables when you can.  Prefer 'populating' data structures to allocating memory.  The sign of the master is a pointer to a stack variable.</li>
+<li>use strings + lengths.  A common pattern is finding stuff in strings.  Instead of returning a new copy of a found substring, just return a pointer to it in it's original source string + it's length</li>
+<li>use lookup tables.  Return pointers into statically allocated structures</li>
+<li>use buffers.  Don't allocate memory for every single item you read from a file or socket.  Statically allocate a big horking buffer and re-use that memory!</li>
+<li>use reasonable maximums.  We often use malloc when we don't know how big something is going to be (usually accompanied by hand wringing).  Put a reasonable limit on it's size, then truncate it into a buffer.  Log the 'error'.</li>
+<li>use 'const' and 'static' properly when declaring variables and arguments.  Be thankful you have a free CC compiler that isn't K&amp;R!</li>
+</ul><h3>
+<a name="the-problem" class="anchor" href="#the-problem"><span class="octicon octicon-link"></span></a>The Problem</h3>
+
+<p>Of course, malloc() is there for a reason.  At some point your will convince yourself that you need a linked list or red-black tree or something.  Sometimes there's no way around it:</p>
+
+<ul>
+<li>make a rule that whoever allocates the memory is responsible for freeing it (I am personifying functions)</li>
+<li>where that's impossible make another rule that covers all of the possible edge cases.  Do this before writing any code</li>
+<li>use cacheing.  If you are mallocing 8 bytes over and over to hold the string 'GLOXXOR', heaven help you.  Malloc it once, store it in some useful hash based structure and return the same pointer every time it's needed.  Added bonus is that there is a single data structure to free up when the time comes.</li>
+<li>prefer big mallocs to little.  Malloc is a very inefficient function.  Calling it often will eat away at performance and will cause 'heap fragmentation' (another useful google search!)</li>
+<li>check out the entire malloc family.  There are a bunch of other flavours of malloc, use the right one.  I like realloc() because it feels like I'm getting one free free().</li>
+</ul><h3>
+<a name="what-this-doesnt-solve" class="anchor" href="#what-this-doesnt-solve"><span class="octicon octicon-link"></span></a>What this doesn't solve</h3>
+
+<p>Pointers are gnarly.  They are hard to reason about and easy to get wrong.  When they go wrong in C, the best thing that can happen is a sudden death of your program and a dumpage of core.  That won't always happen though.  You may just corrupt some nearby memory location and happily continue.  These are the worst.  These are the reasons programmers invented Java, Python, Ruby and Smalltalk in the first place!  </p>
+
+<p>Although that's not why they invented C++.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
