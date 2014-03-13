@@ -1,129 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8" />
-        <title>Not A How To - Programming</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+	<!--<link rel="stylesheet/less" type="text/css" href="/theme/css/style.less">-->
+	<!--<script src="/theme/js/less.js" type="text/javascript"></script>-->
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
 
-        <!--[if IE]>
-            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+	<link href="/" type="application/atom+xml" rel="alternate" title="Not A How To ATOM Feed" />
+
+		<title>Not A How To</title>
+		<meta charset="utf-8" />
 </head>
+<body>
+	<section id="sidebar">
+		<figure id="user_logo">
+			<a href="/"><div class="logo">&nbsp;</div></a>
+		</figure>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="/">Not A How To </a></h1>
-                <nav><ul>
-                    <li><a href="/category/hustle.html">Hustle</a></li>
-                    <li class="active"><a href="/category/programming.html">Programming</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+		<div class="user_meta">
+			<h1 id="user"><a href="/" class="">Tim Spurway</a></h1>
+			<h2></h2>
+			<ul>
+					<li><a href="https://github.com/tspurway">GitHub</a></li>
+					<li><a href="https://twitter.com/t1m">@t1m</a></li>
+					<li><a href="http://www.chango.com/about/labs">Work</a></li>
+					<li><a href="https://github.com/discoproject/disco">Disco</a></li>
+					<li><a href="https://github.com/chango/hustle">Hustle</a></li>
+			</ul>
+		</div>
+		<footer>
+			<address>
+				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
+				theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>.
+			</address>
+		</footer>
+	</section>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/adjusting-to-c.html">Adjusting to C</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2013-10-21T00:00:00">
-                Mon 21 October 2013
-        </abbr>
+	<section id="posts">
+	<header>
+		<h1>Tim Spurway's blog</h1>
+		<h3>
+			<script type="text/javascript">
+				var currentDate = new Date();
+				var day = currentDate.getDate();
+				var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+				var month = monthNames[currentDate.getMonth()].toUpperCase();
+				var year = currentDate.getFullYear();
+				document.write(month + " " + day + ", " + year);
+			</script>
+		</h3>
+	</header>
 
-        <address class="vcard author">
-                By <a class="url fn" href="/author/tim-spurway.html">Tim Spurway</a>
-        </address>
-<p>In <a href="/category/programming.html">Programming</a>. </p>
-<p>tags: <a href="/tag/c.html">c</a><a href="/tag/programming.html">programming</a></p>
-</footer><!-- /.post-info --><p>I am witnessing an odd devolution of otherwise reasonable high-level language programmers to the C programming language.
-Python folks, Ruby dudes, and Java programmers are being drawn to the C flame. I guess it's the Linuxes and vims and
-nginxes and other assorted C wonders. Maybe it's that if you write your code in C, it can be used by all those
-other highfalutin languages, no apologies, no hassles. Maybe it's speed, though I really wonder about that, given
-our blistering fast processors and endless banks of RAM.</p>
-<p>I have noticed a bit of a trend with the Python/Ruby/Java mindset when returning to their roots, so's to speak.
-It's odd, but they seem to love malloc(). I will leave the whys and whatnots as an exercise for the reader, but I
-thought I might offer a perspective.</p>
-<div class="section" id="the-stack">
-<h2>The Stack</h2>
-<p>If you've spent any time around a C programmer, you will notice that they talk about 'the stack' and 'the heap' a lot.
-If they are feeling particularly compsciey, they might even refer to 'automatic variables'. They talk about it in a
-way that there is a pretty simple choice you must make about where your variables' data lives. You might hear them ask:
-&quot;So, why is variable 'glaxxor' on the heap? You could have easily put it on the stack and passed it's address&quot;.
-You might pick up the reverent staccato of their words and concluded there is some reverence for this stack. The heap
-doesn't seem as good. Most things we put in heaps aren't. There's a reason for that.</p>
-</div>
-<div class="section" id="the-heap">
-<h2>The Heap</h2>
-<p>C programmers hate malloc(). This is the most important thing to know to become a grade A (or B) C programmer. They
-mostly hate it because it's a pain in the ass to free(), it's the primary cause of memory leaks (the other, I suppose,
-is infinite recursion), it's slow, and it fragments your once ordered memory like so many leaves in the wind. The
-canonical C program will only have calls to malloc when they are absolutely necessary, because C programmers see
-malloc() for what it really is: a one-size-fits-few solution to a difficult but very specific problem.</p>
-<p>Please note that malloc() and free() are just regular functions in the C language. They aren't built-in, they aren't
-magic, they are just plain functions. Is it odd that a language, whose primary abstraction is the memory address has
-no built-in way of allocating or deallocating memory?</p>
-</div>
-<div class="section" id="garbage">
-<h2>Garbage</h2>
-<p>You won't understand C programming until you understand the C programmer's disdain for garbage collected languages.
-The C programmer approaches malloc with a plan, a clever way to 'get in' and 'get out' with the fewest casualties
-possible. The GC language is carpet bombing your memory, your performance. You see, a C program is always about moving
-bytes in and out of memory and external devices. The GC languages are about something that is decidedly not moving
-bytes around. It might be objects or CAR/CDRs or OOPs or JVM objects (whatever their acronym is), but it's not about
-memory any more. The language has decided it knows better how to handle memory than you. To the C programmer, this is
-like giving the keys to the car to some super (and most likely brain dead) version of malloc. Heck, they didn't like
-malloc when they could control it, now it's going to interrupt their program to clean up 'garbage' that shouldn't have
-been created in the first place?</p>
-</div>
-<div class="section" id="be-free-from-the-heap">
-<h2>Be Free from the Heap</h2>
-<p>If I haven't dissuaded my high-level colleagues from dipping their toes in the C waters, let me give a few tips on
-how to not avoid shying away from malloc():</p>
-<ul class="simple">
-<li>avoid libs that allocate memory &quot;on your behalf&quot;</li>
-<li>prefer libs that force the client to worry about memory management. This usually takes the form of the lib API accepting pointers to structs to populate them. The good thing about this is that you can malloc the memory, or leave it 'on the stack' - up to you, but...</li>
-<li>use the stack! Remember that functions you call don't care if the memory is on the heap or stack. Use automatic variables when you can. Prefer 'populating' data structures to allocating memory. The sign of the master is a pointer to a stack variable.</li>
-<li>use strings + lengths. A common pattern is finding stuff in strings. Instead of returning a new copy of a found substring, just return a pointer to it in it's original source string + it's length</li>
-<li>use lookup tables. Return pointers into statically allocated structures</li>
-<li>use buffers. Don't allocate memory for every single item you read from a file or socket. Statically allocate a big horking buffer and re-use that memory!</li>
-<li>use reasonable maximums. We often use malloc when we don't know how big something is going to be (usually accompanied by hand wringing). Put a reasonable limit on it's size, then truncate it into a buffer. Log the 'error'.</li>
-<li>use 'const' and 'static' properly when declaring variables and arguments. Be thankful you have a free CC compiler that isn't K&amp;R!</li>
-</ul>
-</div>
-<div class="section" id="the-problem">
-<h2>The Problem</h2>
-<p>Of course, malloc() is there for a reason. At some point your will convince yourself that you need a linked list or
-red-black tree or something. Sometimes there's no way around it:</p>
-<ul class="simple">
-<li>make a rule that whoever allocates the memory is responsible for freeing it (I am personifying functions)</li>
-<li>where that's impossible make another rule that covers all of the possible edge cases. Do this before writing any code</li>
-<li>use cacheing. If you are mallocing 8 bytes over and over to hold the string 'GLOXXOR', heaven help you. Malloc it once, store it in some useful hash based structure and return the same pointer every time it's needed. Added bonus is that there is a single data structure to free up when the time comes.</li>
-<li>prefer big mallocs to little. Malloc is a very inefficient function. Calling it often will eat away at performance and will cause 'heap fragmentation' (another useful google search!)</li>
-<li>check out the entire malloc family. There are a bunch of other flavours of malloc, use the right one. I like realloc() because it feels like I'm getting one free free().</li>
-</ul>
-</div>
-<div class="section" id="what-this-doesn-t-solve">
-<h2>What this doesn't solve</h2>
-<p>Pointers are gnarly. They are hard to reason about and easy to get wrong. When they go wrong in C, the best thing that
-can happen is a sudden death of your program and a dumpage of core. That won't always happen though. You may just
-corrupt some nearby memory location and happily continue. These are the worst. These are the reasons programmers
-invented Java, Python, Ruby and Smalltalk in the first place!</p>
-<p>Although that's not why they invented C++.</p>
-</div>
-                </article>
+	<dl>
+		<ol>
+				<li>
+					<h1 class="title">
+						<a href="/adjusting-to-c.html" rel="bookmark" title="Permalink to Adjusting to C">Adjusting to C</a>
+					</h1>
+					<abbr class="published" title="2013-10-21T00:00:00">Mon 21 October 2013</abbr>
+				<div class="entry-content"> <p class="first last">A cheeky look at malloc() from a programmer who should know better</p>
+ </div>
+				</li>
+		</ol>
+	</dl>
+
 <p class="paginator">
-    Page 1 / 1
 </p>
-            </aside><!-- /#featured -->
-            </ol><!-- /#posts-list -->
-            </section><!-- /#content -->
-        <section id="extras" class="body">
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
-
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+	</section>
 
 </body>
 </html>
